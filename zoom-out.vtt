@@ -1,0 +1,134 @@
+WEBVTT
+
+13:00:02.000 --> 13:00:04.000
+Alice: Hi.
+
+13:00:04.000 --> 13:00:06.000
+Bob: Hello. Hello.
+
+13:00:06.000 --> 13:00:09.000
+Alice: How are you doing?
+
+13:00:09.000 --> 13:00:12.000
+Bob: Uh, doing well, thanks. What about you?
+
+13:00:12.000 --> 13:00:15.000
+Alice: Surviving this Friday. Just about.
+
+13:00:15.000 --> 13:00:18.000
+Bob: That sounds familiar.
+
+13:00:18.000 --> 13:00:30.000
+Alice: Thanks for making time today. I know your schedule is packed. I thought it would be useful to spend a few minutes going through the new internal tools project and getting a better sense of the technical setup before we decide what to test first.
+
+13:00:30.000 --> 13:00:34.000
+Bob: Yeah, absolutely. Happy to. Where do you want to start?
+
+13:00:34.000 --> 13:00:40.000
+Alice: Maybe with a broad overview. What does the environment look like today?
+
+13:00:40.000 --> 13:00:55.000
+Bob: Sure. So in general, the application is hosted in the cloud. We’ve got a front-end service, a few backend services, and a database layer. Most of the workloads run in containers, and we’ve separated things into development, staging, and production.
+
+13:00:55.000 --> 13:00:57.000
+Alice: Okay.
+
+13:00:57.000 --> 13:01:03.000
+Bob: We also have object storage for assets and backups, and then a queue for asynchronous jobs.
+
+13:01:03.000 --> 13:01:08.000
+Alice: That makes sense. And roughly how big is the environment at the moment?
+
+13:01:08.000 --> 13:01:17.000
+Bob: It depends how you count it, but if you’re thinking infrastructure, it’s a little over a hundred hosts across the environments. Production is the majority of that.
+
+13:01:17.000 --> 13:01:22.000
+Alice: Got it. And from the application side, are we talking a handful of services or quite a few?
+
+13:01:22.000 --> 13:01:30.000
+Bob: More than a handful. There are probably a few dozen services if you count everything separately, although some of them are much smaller than others.
+
+13:01:30.000 --> 13:01:32.000
+Alice: Okay, that helps.
+
+13:01:32.000 --> 13:01:38.000
+Bob: And in the container platform itself, we’ve usually got a few hundred running workloads at any given time.
+
+13:01:38.000 --> 13:01:42.000
+Alice: Right. So definitely enough moving parts that visibility matters.
+
+13:01:42.000 --> 13:01:45.000
+Bob: Exactly.
+
+13:01:45.000 --> 13:01:48.000
+Alice: What about databases?
+
+13:01:48.000 --> 13:01:57.000
+Bob: Mostly relational. A primary cluster for the transactional side, plus a read replica setup for reporting. Then we’ve got a small cache layer as well.
+
+13:01:57.000 --> 13:02:00.000
+Alice: And logs, are you generating a lot?
+
+13:02:00.000 --> 13:02:10.000
+Bob: Fairly high volume. On busy days it spikes a lot, especially when background jobs are running. We keep the recent logs easy to search, and older ones get archived.
+
+13:02:10.000 --> 13:02:15.000
+Alice: That sounds sensible. Do you usually need fast access to older logs or only occasionally?
+
+13:02:15.000 --> 13:02:22.000
+Bob: Mostly during incidents or when somebody is digging into a weird behaviour pattern from earlier in the week.
+
+13:02:22.000 --> 13:02:26.000
+Alice: Okay. So not all of it needs to be hot all the time.
+
+13:02:26.000 --> 13:02:29.000
+Bob: Right. That would get expensive quickly.
+
+13:02:29.000 --> 13:02:31.000
+Alice: Fair point.
+
+13:02:31.000 --> 13:02:38.000
+Bob: Metrics are more important day to day. CPU, memory, queue depth, request latency, error rates, that sort of thing.
+
+13:02:38.000 --> 13:02:40.000
+Alice: And tracing?
+
+13:02:40.000 --> 13:02:50.000
+Bob: Partial at the moment. Some services are instrumented well, others not so much. It’s one of those things we want to improve without slowing everybody down.
+
+13:02:50.000 --> 13:02:55.000
+Alice: Understood. What about the user-facing side? Is there much of a frontend to monitor?
+
+13:02:55.000 --> 13:03:02.000
+Bob: Some, but the bigger complexity is in the APIs and the worker processes behind them.
+
+13:03:02.000 --> 13:03:05.000
+Alice: Okay, so we’d probably focus on backend health first.
+
+13:03:05.000 --> 13:03:08.000
+Bob: That would be my recommendation.
+
+13:03:08.000 --> 13:03:12.000
+Alice: Makes sense. And for testing, would you want to start with a limited proof of concept?
+
+13:03:12.000 --> 13:03:20.000
+Bob: Yes, definitely. Small scope first. I’d rather prove value with a few services and then expand than try to boil the ocean on day one.
+
+13:03:20.000 --> 13:03:22.000
+Alice: I agree with that.
+
+13:03:22.000 --> 13:03:30.000
+Bob: We can choose one critical workflow, one supporting service, and maybe one queue consumer. That should be enough to show whether the approach works.
+
+13:03:30.000 --> 13:03:33.000
+Alice: Perfect. That gives us a concrete next step.
+
+13:03:33.000 --> 13:03:35.000
+Bob: Great.
+
+13:03:35.000 --> 13:03:38.000
+Alice: Thanks, Bob. That was really helpful.
+
+13:03:38.000 --> 13:03:41.000
+Bob: No problem at all.
+

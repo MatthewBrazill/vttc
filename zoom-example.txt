@@ -1,0 +1,131 @@
+[Alice] 13:00:02
+Hi.
+
+[Bob] 13:00:04
+Hello. Hello.
+
+[Alice] 13:00:06
+How are you doing?
+
+[Bob] 13:00:09
+Uh, doing well, thanks. What about you?
+
+[Alice] 13:00:12
+Surviving this Friday. Just about.
+
+[Bob] 13:00:15
+That sounds familiar.
+
+[Alice] 13:00:18
+Thanks for making time today. I know your schedule is packed. I thought it would be useful to spend a few minutes going through the new internal tools project and getting a better sense of the technical setup before we decide what to test first.
+
+[Bob] 13:00:30
+Yeah, absolutely. Happy to. Where do you want to start?
+
+[Alice] 13:00:34
+Maybe with a broad overview. What does the environment look like today?
+
+[Bob] 13:00:40
+Sure. So in general, the application is hosted in the cloud. We’ve got a front-end service, a few backend services, and a database layer. Most of the workloads run in containers, and we’ve separated things into development, staging, and production.
+
+[Alice] 13:00:55
+Okay.
+
+[Bob] 13:00:57
+We also have object storage for assets and backups, and then a queue for asynchronous jobs.
+
+[Alice] 13:01:03
+That makes sense. And roughly how big is the environment at the moment?
+
+[Bob] 13:01:08
+It depends how you count it, but if you’re thinking infrastructure, it’s a little over a hundred hosts across the environments. Production is the majority of that.
+
+[Alice] 13:01:17
+Got it. And from the application side, are we talking a handful of services or quite a few?
+
+[Bob] 13:01:22
+More than a handful. There are probably a few dozen services if you count everything separately, although some of them are much smaller than others.
+
+[Alice] 13:01:30
+Okay, that helps.
+
+[Bob] 13:01:32
+And in the container platform itself, we’ve usually got a few hundred running workloads at any given time.
+
+[Alice] 13:01:38
+Right. So definitely enough moving parts that visibility matters.
+
+[Bob] 13:01:42
+Exactly.
+
+[Alice] 13:01:45
+What about databases?
+
+[Bob] 13:01:48
+Mostly relational. A primary cluster for the transactional side, plus a read replica setup for reporting. Then we’ve got a small cache layer as well.
+
+[Alice] 13:01:57
+And logs, are you generating a lot?
+
+[Bob] 13:02:00
+Fairly high volume. On busy days it spikes a lot, especially when background jobs are running. We keep the recent logs easy to search, and older ones get archived.
+
+[Alice] 13:02:10
+That sounds sensible. Do you usually need fast access to older logs or only occasionally?
+
+[Bob] 13:02:15
+Mostly during incidents or when somebody is digging into a weird behaviour pattern from earlier in the week.
+
+[Alice] 13:02:22
+Okay. So not all of it needs to be hot all the time.
+
+[Bob] 13:02:26
+Right. That would get expensive quickly.
+
+[Alice] 13:02:29
+Fair point.
+
+[Bob] 13:02:31
+Metrics are more important day to day. CPU, memory, queue depth, request latency, error rates, that sort of thing.
+
+[Alice] 13:02:38
+And tracing?
+
+[Bob] 13:02:40
+Partial at the moment. Some services are instrumented well, others not so much. It’s one of those things we want to improve without slowing everybody down.
+
+[Alice] 13:02:50
+Understood. What about the user-facing side? Is there much of a frontend to monitor?
+
+[Bob] 13:02:55
+Some, but the bigger complexity is in the APIs and the worker processes behind them.
+
+[Alice] 13:03:02
+Okay, so we’d probably focus on backend health first.
+
+[Bob] 13:03:05
+That would be my recommendation.
+
+[Alice] 13:03:08
+Makes sense. And for testing, would you want to start with a limited proof of concept?
+
+[Bob] 13:03:12
+Yes, definitely. Small scope first. I’d rather prove value with a few services and then expand than try to boil the ocean on day one.
+
+[Alice] 13:03:20
+I agree with that.
+
+[Bob] 13:03:22
+We can choose one critical workflow, one supporting service, and maybe one queue consumer. That should be enough to show whether the approach works.
+
+[Alice] 13:03:30
+Perfect. That gives us a concrete next step.
+
+[Bob] 13:03:33
+Great.
+
+[Alice] 13:03:35
+Thanks, Bob. That was really helpful.
+
+[Bob] 13:03:38
+No problem at all.

@@ -1,0 +1,65 @@
+Jan 1, 2026
+Alice & Bob: Project Sync - Transcript
+00:00:00
+ 
+Alice: Hi.
+Bob: Hello. Hello.
+Alice: How are you doing?
+Bob: Uh, doing well, thanks. What about you?
+Alice: Surviving this Friday. Just about.
+Bob: That sounds familiar.
+Alice: Thanks for making time today. I know your schedule is packed. I thought it would be useful to spend a few minutes going through the new internal tools project and getting a better sense of the technical setup before we decide what to test first.
+Bob: Yeah, absolutely. Happy to. Where do you want to start?
+Alice: Maybe with a broad overview. What does the environment look like today?
+ 
+ 
+00:01:02
+ 
+Bob: Sure. So in general, the application is hosted in the cloud. We’ve got a front-end service, a few backend services, and a database layer. Most of the workloads run in containers, and we’ve separated things into development, staging, and production.
+Alice: Okay.
+Bob: We also have object storage for assets and backups, and then a queue for asynchronous jobs.
+Alice: That makes sense. And roughly how big is the environment at the moment?
+Bob: It depends how you count it, but if you’re thinking infrastructure, it’s a little over a hundred hosts across the environments. Production is the majority of that.
+Alice: Got it. And from the application side, are we talking a handful of services or quite a few?
+Bob: More than a handful. There are probably a few dozen services if you count everything separately, although some of them are much smaller than others.
+Alice: Okay, that helps.
+Bob: And in the container platform itself, we’ve usually got a few hundred running workloads at any given time.
+Alice: Right. So definitely enough moving parts that visibility matters.
+Bob: Exactly.
+ 
+ 
+00:02:05
+ 
+Alice: What about databases?
+Bob: Mostly relational. A primary cluster for the transactional side, plus a read replica setup for reporting. Then we’ve got a small cache layer as well.
+Alice: And logs, are you generating a lot?
+Bob: Fairly high volume. On busy days it spikes a lot, especially when background jobs are running. We keep the recent logs easy to search, and older ones get archived.
+Alice: That sounds sensible. Do you usually need fast access to older logs or only occasionally?
+Bob: Mostly during incidents or when somebody is digging into a weird behaviour pattern from earlier in the week.
+Alice: Okay. So not all of it needs to be hot all the time.
+Bob: Right. That would get expensive quickly.
+Alice: Fair point.
+Bob: Metrics are more important day to day. CPU, memory, queue depth, request latency, error rates, that sort of thing.
+Alice: And tracing?
+Bob: Partial at the moment. Some services are instrumented well, others not so much. It’s one of those things we want to improve without slowing everybody down.
+ 
+ 
+00:03:03
+ 
+Alice: Understood. What about the user-facing side? Is there much of a frontend to monitor?
+Bob: Some, but the bigger complexity is in the APIs and the worker processes behind them.
+Alice: Okay, so we’d probably focus on backend health first.
+Bob: That would be my recommendation.
+Alice: Makes sense. And for testing, would you want to start with a limited proof of concept?
+Bob: Yes, definitely. Small scope first. I’d rather prove value with a few services and then expand than try to boil the ocean on day one.
+Alice: I agree with that.
+Bob: We can choose one critical workflow, one supporting service, and maybe one queue consumer. That should be enough to show whether the approach works.
+Alice: Perfect. That gives us a concrete next step.
+Bob: Great.
+Alice: Thanks, Bob. That was really helpful.
+Bob: No problem at all.
+ 
+ 
+Transcription ended after 00:03:46
+
+This editable transcript was computer generated and might contain errors. People can also change the text after it was created.
