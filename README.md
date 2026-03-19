@@ -111,4 +111,4 @@ The tests compare the generated `.vtt` output against the `examples/*.vtt` refer
 
 ## 🧾 License
 
-No license is specified in this repository. If you want to add one, create a `LICENSE` file.
+This project is licensed under the terms specified in the [LICENSE](LICENSE) file.
