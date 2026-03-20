@@ -5,16 +5,16 @@ import re
 from datetime import datetime
 from datetime import timedelta
 
-def main(i, o=None, f=False):
+def main(input_file, output_file=None, force=False):
     try:
         vtt_content = []
         content = []
-        with open(i, 'r') as infile:
-            input = infile.read().strip()
+        with open(input_file, 'r') as infile:
+            input_data = infile.read().strip()
 
         try:
-            if input[0] == "[": # Zoom transcript
-                content = input.split("\n\n")
+            if input_data and input_data[0] == "[": # Zoom transcript
+                content = input_data.split("\n\n")
                 for line in content:
                     title = line.split("\n")[0].split(" ")
                     timestamp = title.pop()
@@ -24,7 +24,7 @@ def main(i, o=None, f=False):
                         try:
                             timestamp = datetime.strptime(timestamp, "%H:%M:%S")
                         except ValueError as err:
-                                if f == True:
+                                if force == True:
                                     print(f"WARN: Error parsing timestamp '{timestamp}'; skipping block.")
                                     continue
                                 else:
@@ -37,11 +37,11 @@ def main(i, o=None, f=False):
                     })
 
             else: # Google Meet transcript
-                content = input.split("\n", 2)[-1].split("\n \n \n")
+                content = input_data.split("\n", 2)[-1].split("\n \n \n")
                 if re.compile(r"^\d{2}:\d{2}:\d{2}(?:\.\d+)?$").match(content[-1]) is None:
                 #if content[-1].startswith("Transcription"):
                     content.pop()
-                for i, block in enumerate(content):
+                for idx, block in enumerate(content):
                     allText = block.split("\n \n")[1].split("\n")
                     initialTs = None
                     nextTs = None
@@ -52,22 +52,22 @@ def main(i, o=None, f=False):
                         try:
                             initialTs = datetime.strptime(block.split("\n \n")[0], "%H:%M:%S")
                         except ValueError as err:
-                                if f == True:
+                                if force == True:
                                     errorTs = block.split('\n \n')[0]
                                     print(f"WARN: Error parsing timestamp '{errorTs}'; skipping block.")
                                     continue
                                 else:
                                     raise err
 
-                    if i < len(content)-1:
+                    if idx < len(content)-1:
                         try:
-                            nextTs = datetime.strptime(content[i+1].split("\n \n")[0], "%H:%M:%S.%f")
+                            nextTs = datetime.strptime(content[idx+1].split("\n \n")[0], "%H:%M:%S.%f")
                         except ValueError:
                             try:
-                                nextTs = datetime.strptime(content[i+1].split("\n \n")[0], "%H:%M:%S")
+                                nextTs = datetime.strptime(content[idx+1].split("\n \n")[0], "%H:%M:%S")
                             except ValueError as err:
-                                if f == True:
-                                    errorTs = content[i+1].split('\n \n')[0]
+                                if force == True:
+                                    errorTs = content[idx+1].split('\n \n')[0]
                                     print(f"WARN: Error parsing timestamp '{errorTs}'; skipping block.")
                                     continue
                                 else:
@@ -76,25 +76,25 @@ def main(i, o=None, f=False):
                         nextTs = initialTs + timedelta(0,len(allText))
 
                     secondsPerLine = timedelta(0,(nextTs - initialTs).total_seconds() / len(allText))
-                    for i, line in enumerate(allText, 1):
+                    for line_idx, line in enumerate(allText, 1):
                         vtt_content.append({
-                            "timestamp": initialTs + secondsPerLine * i,
+                            "timestamp": initialTs + secondsPerLine * line_idx,
                             "speaker": line.split(":")[0],
                             "text": " ".join(line.split(":")[1:]).strip()
                         })
 
             output = "WEBVTT\n\n"
-            for i, item in enumerate(vtt_content):
-                if i < len(vtt_content)-1:
-                    output += f"{item['timestamp'].strftime('%H:%M:%S.%f')[:-3]} --> {vtt_content[i+1]['timestamp'].strftime('%H:%M:%S.%f')[:-3]}\n{item['speaker']}: {item['text']}\n\n"
+            for item_idx, item in enumerate(vtt_content):
+                if item_idx < len(vtt_content)-1:
+                    output += f"{item['timestamp'].strftime('%H:%M:%S.%f')[:-3]} --> {vtt_content[item_idx+1]['timestamp'].strftime('%H:%M:%S.%f')[:-3]}\n{item['speaker']}: {item['text']}\n\n"
                 else: 
                     output += f"{item['timestamp'].strftime('%H:%M:%S.%f')[:-3]} --> {(item['timestamp'] + timedelta(0,3)).strftime('%H:%M:%S.%f')[:-3]}\n{item['speaker']}: {item['text']}\n\n"
 
             try:
-                if o:
-                    with open(o, 'w') as outfile:
+                if output_file:
+                    with open(output_file, 'w') as outfile:
                         outfile.write(output)
-                    print(f"Output written to '{o}'")
+                    print(f"Output written to '{output_file}'")
                 else:
                     with open("output.vtt", 'w') as outfile:
                         outfile.write(output)
@@ -109,7 +109,7 @@ def main(i, o=None, f=False):
             exit(1)
 
     except Exception as e:
-        print(f"Error reading file {i}: {e}")
+        print(f"Error reading file {input_file}: {e}")
         exit(1)
 
 if __name__ == "__main__":
