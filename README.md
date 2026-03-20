@@ -22,7 +22,7 @@ mkdir -p ~/bin && curl -Lo ~/bin/vttc https://raw.githubusercontent.com/MatthewB
 
 ---
 
-## How it works (quick overview)
+## Basic usage
 
 `vttc` reads a transcript export and produces a clean WebVTT file that timestamps each line.
 
@@ -37,9 +37,7 @@ mkdir -p ~/bin && curl -Lo ~/bin/vttc https://raw.githubusercontent.com/MatthewB
 - Each line is treated as a subtitle cue and includes the speaker label (where available).
 - A small default “end” buffer is applied to the final cue so the file is always valid.
 
----
-
-## Basic usage
+### Usage Example
 
 ```bash
 vttc -i path/to/transcript.txt -o out.vtt
@@ -69,7 +67,7 @@ vttc -i examples/google-example.txt -o examples/google-out.vtt
 
 ---
 
-## Contributing / How it works (developer notes)
+## Contributing
 
 ### Key behavior
 
@@ -110,6 +108,6 @@ The tests compare the generated `.vtt` output against the `examples/*.vtt` refer
 
 ---
 
-## 🧾 License
+## License
 
 This project is licensed under the terms specified in the [LICENSE](LICENSE) file.
