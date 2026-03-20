@@ -49,6 +49,7 @@ vttc -i path/to/transcript.txt -o out.vtt
 
 - `-i`, `--file` &nbsp;&nbsp;&nbsp;Input transcript file (required)
 - `-o`, `--output` &nbsp;&nbsp;&nbsp;Output file (defaults to `output.vtt`)
+- `-r`, `--replace` &nbsp;&nbsp;&nbsp;Replace input file with converted output
 - `-f`, `--force` &nbsp;&nbsp;&nbsp;Continue even if some timestamps can’t be parsed (skips invalid blocks)
 
 ---
