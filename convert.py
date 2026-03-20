@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 
 import argparse
+import os
 import re
 from datetime import datetime
 from datetime import timedelta
 
-def main(input_file, output_file=None, force=False):
+def main(input_file, output_file=None, force=False, replace=False):
     try:
         vtt_content = []
         content = []
@@ -91,14 +92,25 @@ def main(input_file, output_file=None, force=False):
                     output += f"{item['timestamp'].strftime('%H:%M:%S.%f')[:-3]} --> {(item['timestamp'] + timedelta(0,3)).strftime('%H:%M:%S.%f')[:-3]}\n{item['speaker']}: {item['text']}\n\n"
 
             try:
-                if output_file:
-                    with open(output_file, 'w') as outfile:
-                        outfile.write(output)
-                    print(f"Output written to '{output_file}'")
+                if replace:
+                    target_file = input_file
+                elif output_file:
+                    target_file = output_file
                 else:
-                    with open("output.vtt", 'w') as outfile:
-                        outfile.write(output)
-                    print(f"Output written to 'output.vtt'")
+                    target_file = "output.vtt"
+
+                with open(target_file, 'w') as outfile:
+                    outfile.write(output)
+
+                if replace:
+                    final_file = os.path.splitext(input_file)[0] + ".vtt"
+                    if os.path.abspath(final_file) != os.path.abspath(input_file):
+                        os.replace(input_file, final_file)
+                    else:
+                        final_file = input_file
+                    print(f"Output written to '{final_file}'")
+                else:
+                    print(f"Output written to '{target_file}'")
             except Exception as e:
                 print(f"Error writing output file: {e}")
                 exit(1)
@@ -116,11 +128,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="A script to convert Zoom and Google Meet transcripts into functional VTT scripts for Homerun.")
     parser.add_argument("-i", "--file", help="Input file")
     parser.add_argument("-o", "--output", default=None, help="Output file (optional)")
-    parser.add_argument("-f", "--force", default=False, help="Force conversion even if there are timestamp errors (optional)")
+    parser.add_argument("-r", "--replace", action="store_true", default=False, help="Replace input file and rename to .vtt")
+    parser.add_argument("-f", "--force", action="store_true", default=False, help="Force conversion even if there are timestamp errors (optional)")
     parser.add_argument("--version", action="version", version="%(prog)s 1.4")
     args = parser.parse_args()
 
     if not args.file:
         parser.print_help()
         exit(1)
-    main(args.file, args.output, args.force)
+    main(args.file, args.output, args.force, args.replace)
