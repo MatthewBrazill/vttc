@@ -36,6 +36,29 @@ class TestVttConverter(unittest.TestCase):
             expected_path=os.path.join(os.path.dirname(__file__), "..", "examples", "zoom-out.vtt"),
         )
 
+    def test_replace_flag_renames_to_vtt(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            input_path = os.path.join(tmpdir, "transcript.txt")
+            expected_path = os.path.join(os.path.dirname(__file__), "..", "examples", "google-out.vtt")
+
+            # Copy sample input
+            with open(os.path.join(os.path.dirname(__file__), "..", "examples", "google-example.txt"), "r", encoding="utf-8") as src:
+                with open(input_path, "w", encoding="utf-8") as dst:
+                    dst.write(src.read())
+
+            main(input_path, r=True)
+
+            output_path = os.path.join(tmpdir, "transcript.vtt")
+            self.assertTrue(os.path.exists(output_path), "Expected renamed .vtt file to exist")
+            self.assertFalse(os.path.exists(input_path), "Original input file should be replaced")
+
+            with open(output_path, "r", encoding="utf-8") as f:
+                actual = normalize_vtt(f.read())
+            with open(expected_path, "r", encoding="utf-8") as f:
+                expected = normalize_vtt(f.read())
+
+            self.assertEqual(actual, expected)
+
 
 if __name__ == "__main__":
     unittest.main()
